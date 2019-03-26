@@ -2,12 +2,19 @@ import React from 'react';
 import { Text, View, StyleSheet, FlatList, ActivityIndicator  } from 'react-native';
 
 export default class DetailDisease extends React.Component {
+  static navigationOptions = {
+    title:'Informasi Penyakit'
+  };
+  
   constructor(props){
     super(props);
     this.state = { isLoading: true}
+    const { navigate } = this.props.navigation;
+    this.state = { id: `${this.props.navigation.state.params.idDisease}` }
   }
+
   componentDidMount(){    
-    return fetch('http://medped.achmadekojulianto.com/index.php/api/disease?id=2' )
+    return fetch('http://medped.achmadekojulianto.com/index.php/api/disease?id='+this.state.id )
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -23,6 +30,7 @@ export default class DetailDisease extends React.Component {
       });
   } 
   render(){
+    
     if(this.state.isLoading){
       return(
         <View style={{flex: 1, padding: 20}}>

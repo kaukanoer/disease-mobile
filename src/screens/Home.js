@@ -2,10 +2,13 @@ import React from 'react';
 import { StyleSheet, TextInput, Button, FlatList, ActivityIndicator, Text, View  } from 'react-native';
 
 export default class Home extends React.Component {
-
+  static navigationOptions = {
+    title:'Beranda'
+  };
   constructor(props){
     super(props);
     this.state = { isLoading: true}
+    this.state = { idDisease: ''}
   }
 
   componentDidMount(){   
@@ -28,6 +31,7 @@ export default class Home extends React.Component {
 
 
   render(){
+    const { navigate } = this.props.navigation;
     // const cariButton = ({ children }) => ({
     //   type: Button,
     //   props: {
@@ -66,7 +70,8 @@ export default class Home extends React.Component {
           renderItem={({item}) => 
           <View>            
             <Text 
-            onPress={() => this.props.navigation.navigate("detail", { idDisease: '1' })}
+            // onPress={() => this.props.navigation.navigate("detail", this.state.idDisease=item.id)}
+            onPress={() => navigate('detail', { idDisease : item.id })}
             >{item.Disease}</Text>
           </View>}
           keyExtractor={({Disease}, index) => Disease}
