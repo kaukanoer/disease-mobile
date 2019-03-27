@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, FlatList, ActivityIndicator  } from 'react-native';
+import { Text, View, StyleSheet, FlatList, ActivityIndicator, Button  } from 'react-native';
 
 export default class DetailDisease extends React.Component {
   static navigationOptions = {
@@ -51,7 +51,7 @@ export default class DetailDisease extends React.Component {
                 <Text>Obat: {item.First_Aid}</Text>
               </View>}
               keyExtractor={({Disease}, index) => Disease}
-        />
+          />
           </View>
       )
   }
@@ -61,5 +61,5 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     padding: 5,
-  }
+  },
 })

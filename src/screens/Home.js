@@ -29,24 +29,8 @@ export default class Home extends React.Component {
       });
   } 
 
-
   render(){
     const { navigate } = this.props.navigation;
-    // const cariButton = ({ children }) => ({
-    //   type: Button,
-    //   props: {
-    //     color: 'rgb(32,78,95)',
-    //     children: children
-    //   }
-    // })
-    
-    // const dataList = [].concat(this.state.data)
-    // .sort((a, b) => a.idDisease > b.idDisease)
-    // .map((item, i) =>
-    //   <div key={i}>
-    //   {item.Disease}
-    //   </div>
-    // )
     if(this.state.isLoading){
       return(
         <View style={{flex: 1, padding: 20}}>
@@ -62,7 +46,7 @@ export default class Home extends React.Component {
             placeholder="Cari info penyakit"
             onChangeText={(text) => this.setState({text})}
           />
-          <Button title='Cari' style={styles.buttonSearch}/>
+          <Button title='Search' style={styles.buttonSearch}/>
           {/* <cariButton/> */}
         </View>
         <FlatList
@@ -76,6 +60,8 @@ export default class Home extends React.Component {
           </View>}
           keyExtractor={({Disease}, index) => Disease}
         />
+        <Button style={styles.submitButton} title='Tambah Informasi Penyakit'
+        onPress={() => navigate('insert')}/>
       </View>
     );
   }
@@ -86,12 +72,19 @@ const styles = StyleSheet.create({
     padding: 5
   }, 
   buttonSearch:{
-    width:30
+    width:10,
+    alignItems: 'center',
+    justifyContent:'center'
   },
   searchBar:{
     paddingLeft: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'rgba(000,000,000,0.1)'
+  },
+  submitButton: {
+    position: 'absolute',
+    bottom:0,
+    left:0,
   }
 })
