@@ -9,17 +9,16 @@ export default class DetailDisease extends React.Component {
   constructor(props){
     super(props);
     this.state = { isLoading: true}
-    const { navigate } = this.props.navigation;
-    this.state = { id: `${this.props.navigation.state.params.idDisease}` }
+    this.state = { name: `${this.props.navigation.state.params.parsingDisease}` }
   }
 
   componentDidMount(){    
-    return fetch('http://medped.achmadekojulianto.com/index.php/api/disease?id='+this.state.id )
+    return fetch('http://medped.achmadekojulianto.com/index.php/api/disease?diseases='+this.state.name )
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          dataSource: responseJson.data,
+          dataSource: responseJson,
         }, function(){
 
         });

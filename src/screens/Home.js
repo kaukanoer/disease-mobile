@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TextInput, Button, FlatList, ActivityIndicator, Text, View  } from 'react-native';
+import { StyleSheet, TextInput, Button, FlatList, ActivityIndicator, Text, View, TouchableOpacity  } from 'react-native';
 
 export default class Home extends React.Component {
   static navigationOptions = {
@@ -8,28 +8,25 @@ export default class Home extends React.Component {
   constructor(props){
     super(props);
     this.state = { isLoading: true}
-    this.state = { idDisease: ''}
+    this.state = { parsingDisease: ''}
   }
 
   componentDidMount(){   
     return fetch('http://medped.achmadekojulianto.com/index.php/api/disease')
       .then((response) => response.json())
       .then((responseJson) => {
-
         this.setState({
           isLoading: false,
-          dataSource: responseJson.data,
+          dataSource: responseJson.sort((a, b) => a.Disease.localeCompare(b.Disease)) //sorting it just layk that
         }, function(){
-
         });
-
       })
       .catch((error) =>{
         console.error(error);
       });
   } 
 
-  render(){
+  render(){    
     const { navigate } = this.props.navigation;
     if(this.state.isLoading){
       return(
@@ -37,40 +34,44 @@ export default class Home extends React.Component {
           <ActivityIndicator/>
         </View>
       )
-    }
-
-    return(
-      <View style={styles.container}>
-        <View style={styles.searchBar}>
-          <TextInput
-            placeholder="Cari info penyakit"
-            onChangeText={(text) => this.setState({text})}
+    } else{
+      return(
+        <View style={styles.container}>
+          <View style={styles.searchBar}>
+            <TextInput
+              placeholder="Cari info penyakit"
+              onChangeText={(text) => this.setState({text})}
+            />
+            <Button title='Search' style={styles.buttonSearch}/>
+          </View>
+          <FlatList 
+            data={this.state.dataSource}
+            renderItem={({item}) => 
+            <View>
+                <TouchableOpacity onPress={() => navigate('detail', { parsingDisease : item.Disease })}>
+                  <Text style={styles.listText} >{item.Disease}</Text>
+                </TouchableOpacity>
+            </View>}
+            keyExtractor={({id}, index) => id}
           />
-          <Button title='Search' style={styles.buttonSearch}/>
-          {/* <cariButton/> */}
+          <Button style={styles.submitButton} title='Sorting'
+          onPress={() => navigate('sort')}/>
+          <Button style={styles.submitButton} title='Tambah Informasi Penyakit'
+          onPress={() => navigate('insert')}/>
         </View>
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({item}) => 
-          <View>            
-            <Text 
-            // onPress={() => this.props.navigation.navigate("detail", this.state.idDisease=item.id)}
-            onPress={() => navigate('detail', { idDisease : item.id })}
-            >{item.Disease}</Text>
-          </View>}
-          keyExtractor={({Disease}, index) => Disease}
-        />
-        <Button style={styles.submitButton} title='Tambah Informasi Penyakit'
-        onPress={() => navigate('insert')}/>
-      </View>
-    );
+      );
+    }
   }
 }
+
 const styles = StyleSheet.create({
   container:{
     flex:1,
     padding: 5
   }, 
+  listText :{
+    fontSize: 24
+  },
   buttonSearch:{
     width:10,
     alignItems: 'center',

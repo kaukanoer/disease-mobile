@@ -80,30 +80,6 @@ export default class Insert extends React.Component {
   }
 }
 
-
-// insertDisease = async () => {
-//   fetch("http://medped.achmadekojulianto.com/index.php/api/disease", {
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify({
-//       Disease: "Nama Penyakit",
-//       Definition: "Definisi Penyakit",
-//       Cause: "Penyebab Penyakit",
-//       Deterrent: "Pencegahan",
-//       First_Aid: "Obat"
-//     }),
-//   }).then ((response) => response.json())
-//     .then ((responJson) =>{
-//       return responJson.data
-//     })
-//     .catch((error) =>{
-//       console.error(error)
-//     })
-// }
-
 async function saveDisease(params){
   try {
     let response = await fetch (api, {
