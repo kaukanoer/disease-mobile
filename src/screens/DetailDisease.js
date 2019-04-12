@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View, StyleSheet, FlatList, ActivityIndicator, Button  } from 'react-native';
+import { Text, View, StyleSheet, FlatList, ActivityIndicator, StatusBar  } from 'react-native';
+import { SearchBar, Header, Divider } from 'react-native-elements';
 
 export default class DetailDisease extends React.Component {
   static navigationOptions = {
-    title:'Informasi Penyakit'
+    header: null
   };
   
   constructor(props){
@@ -36,29 +37,57 @@ export default class DetailDisease extends React.Component {
           <ActivityIndicator/>
         </View>
       )
-    }
+    } else {
       return(
           <View style={styles.container}>
+          <StatusBar backgroundColor="rgb(4,38,63)" translucent={true}/>
+          <Header   
+            backgroundColor = "rgb(4,38,63)"   
+            barStyle = 'light-content'    
+            centerComponent ={{text: this.state.name, style:{color: '#FFFFFF', fontSize: 24}}}/>
+       
             <FlatList
               data={this.state.dataSource}
               renderItem={({item}) => 
-              <View>            
-                <Text>Nama Penyakit: {item.Disease}</Text>
-                <Text>Definisi: {item.Definition}</Text>
-                <Text>Penyebab: {item.Cause}</Text>
-                <Text>Pencegahan:{item.Deterrent}</Text>
-                <Text>Obat: {item.First_Aid}</Text>
+              <View style={styles.detailContainer}>            
+                <Text style={styles.judul}>Definisi</Text>
+                <Text style={styles.subJudul}>{item.Definition}</Text>
+                <Divider/>
+
+                <Text style={styles.judul}>Penyebab</Text>
+                <Text style={styles.subJudul}>{item.Cause}</Text>
+                <Divider/>
+
+                <Text style={styles.judul}>Pencegahan</Text>
+                <Text style={styles.subJudul}>{item.Deterrent}</Text>
+                <Divider/>
+
+                <Text style={styles.judul}>Obat:</Text>
+                <Text style={styles.subJudul}>{item.First_Aid}</Text>
               </View>}
               keyExtractor={({Disease}, index) => Disease}
           />
           </View>
       )
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container:{
     flex:1,
-    padding: 5,
   },
+  detailContainer:{
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  judul:{
+    fontSize: 22,
+    paddingTop: 10
+  },
+  subJudul: {
+    fontSize: 18,
+    paddingBottom: 10,
+    textAlign: 'justify'
+  }
 })

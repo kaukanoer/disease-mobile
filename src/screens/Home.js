@@ -4,7 +4,7 @@ import { SearchBar, Header, Divider } from 'react-native-elements';
 
 export default class Home extends React.Component {
   static navigationOptions = {
-    header: null
+    header: null,
   };
   constructor(props){
     super(props);
@@ -12,7 +12,8 @@ export default class Home extends React.Component {
       isLoading: true,
       parsingDisease: '',
       search: '',
-      error: null
+      error: null,
+      refreshing: false
     }
     this.arayHolder = []
   }
@@ -23,10 +24,11 @@ export default class Home extends React.Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          dataSource: responseJson.sort((a, b) => a.Disease.localeCompare(b.Disease)), //sorting it just layk that
+          refreshing: false,
+          dataSource: responseJson.filter(item => item.IsActive === '1').sort((a, b) => a.Disease.toUpperCase().localeCompare(b.Disease.toUpperCase())), //sorting it just layk that
           error : responseJson.error || null          
         }, function(){
-          this.arrayHolder = responseJson.sort((a, b) => a.Disease.localeCompare(b.Disease))
+          this.arrayHolder = this.state.dataSource
         });
       })
       .catch((error) =>{
@@ -49,6 +51,13 @@ export default class Home extends React.Component {
    });  
   };
 
+  handleRefresh = () => {
+    this.setState ({
+      refreshing: true
+    }, () =>{
+      this.componentDidMount()
+    })
+  }
 
   render(){    
     const { navigate } = this.props.navigation;
@@ -61,34 +70,37 @@ export default class Home extends React.Component {
     } else {
       return(
         <View style={styles.container}>
-        <StatusBar backgroundColor="rgb(4,38,63)" translucent={true}/>
-        <Header   
-          backgroundColor = "rgb(4,38,63)"   
-          barStyle = 'light-content'    
-          centerComponent ={{text: 'Disease Info', style:{color: '#FFFFFF', fontSize: 24}}}/>
-       <SearchBar
-          lightTheme
-          searchIcon={{size: 20}}
-          placeholder="Search.."
-          onChangeText={text => this.searchFilterFunction(text)}
-          value ={this.state.search}/>
+          <StatusBar backgroundColor="rgb(4,38,63)" translucent={true}/>
+          <Header   
+            backgroundColor = "rgb(4,38,63)"   
+            barStyle = 'light-content'    
+            centerComponent ={{text: 'InboHealth', style:{color: '#FFFFFF', fontSize: 24}}}/>
+          <SearchBar
+              lightTheme
+              placeholder="Search.."
+              onChangeText={text => this.searchFilterFunction(text)}
+              value ={this.state.search}/>
 
-          <FlatList 
-            data={this.state.dataSource}
-            renderItem={({item}) => 
-            <View>
-                <TouchableOpacity onPress={() => navigate('detail', { parsingDisease : item.Disease })}>
-                  <Text style={styles.listText} >{item.Disease}</Text>
-                </TouchableOpacity>
-                <Divider/>
-            </View>
-            }
-            keyExtractor={({id}, index) => id}
-          />
-          {/* <Button style={styles.submitButton} title='Sorting'
-          onPress={() => navigate('sort')}/> */}
-          <Button style={styles.submitButton} title='Tambah Informasi Penyakit'
-          onPress={() => navigate('insert')}/>
+            <FlatList 
+              data={this.state.dataSource}
+              keyExtractor={({id}, index) => id}
+              refreshing = {this.state.refreshing}      
+              onRefresh={this.handleRefresh}    
+              renderItem={({item}) => 
+              <View>
+                  <View>
+                    <TouchableOpacity onPress={() => navigate('detail', { parsingDisease : item.Disease })}>
+                      <Text style={styles.listText} >{item.Disease}</Text>
+                    </TouchableOpacity>
+                    <Divider/>
+                  </View>
+              </View>
+              }
+            />
+            <Button style={styles.submitButton} title='Sorting'
+            onPress={() => navigate('sort')}/>
+            <Button style={styles.submitButton} title='Tambah Informasi Penyakit'
+            onPress={() => navigate('insert')}/>
         </View>
       );
     }
