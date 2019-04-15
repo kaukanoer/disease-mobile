@@ -6,12 +6,11 @@ import Insert from './src/screens/InsertDisease'
 import MyApp from './src/screens/Sorting'
 
 const Appnavigator = createStackNavigator({
-  // home: {screen: Home},
-  // detail: {screen: DetailDisease},
-  // insert : {screen: Insert},
+  home: {screen: Home},
+  detail: {screen: DetailDisease},
+  insert : {screen: Insert},
   sort: {screen: MyApp},
   home: {screen: Home},
-
 })
 
 const App = createAppContainer(Appnavigator)

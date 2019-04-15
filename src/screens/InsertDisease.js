@@ -1,18 +1,9 @@
 import React from "react";
-import {
-  StyleSheet,
-  TextInput,
-  Button,
-  Text,
-  View,
-  ScrollView,
-  StatusBar,
-  Alert
-} from "react-native";
+import { StyleSheet, TextInput, Button, Text, View, ScrollView, StatusBar, Alert } from "react-native";
 import { Header } from 'react-native-elements';
+import Modal from 'react-native-modalbox';
 
 const api = 'http://medped.achmadekojulianto.com/index.php/api/disease'
-// const { navigate } = this.props.navigation;
 async function saveDisease(params){
   try {
     let response = await fetch (api, {
@@ -24,25 +15,12 @@ async function saveDisease(params){
       body:JSON.stringify(params)
     })
     let responJson = await response.json()
-    return responJson.code
-    // if (responJson[0] === '1'){
-    // Alert.alert('Berhasil menambahkan ' + responJson[0], [{text: 'OK', onPress: () => navigate('home')}])
-    // }      
-    // .then((response) => response.json())
-    // .then ((responseJson) => {
-    // Alert.alert ("Berhasil menambahkan "+ responseJson.disease)
-    // })
-    // catch (error)  {
-    //   console.error(error)
-    // }
-    // if(responJson.code === '1'){
-    //   return Alert.alert('Sukses', params.disease+' berhasil ditambahkan', [{text:'OK', onPress: () => navigate('home')}])
-    // }
-    // return Alert.alert('Sukses', 'Berhasil menambahkan data', {text: 'OK'})
+    return responJson
   } catch (error) {
     console.error(`Error is ${error}`)
   }
 }
+
 export default class Insert extends React.Component {
   static navigationOptions = {
     header: null,
@@ -61,6 +39,16 @@ export default class Insert extends React.Component {
   Capitalize(str){
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+  _onPressOK(){
+    Alert.alert(
+      'Sukses',
+      'Berhasil memasukan data',
+      [  
+        {text: 'OK', onPress: () => this.props.navigation.navigate('home')}
+      ],  
+      {cancelable: false},
+    )}
+
 
   render() {  
     return (
@@ -74,31 +62,30 @@ export default class Insert extends React.Component {
           <Text>Nama Penyakit</Text>
           <TextInput 
             onChangeText={(text) => this.setState({disease : text})}          
-            value={this.state.disease}
-          />
+            value={this.state.disease}/>
+
           <Text>Definisi</Text>
           <TextInput 
             onChangeText={(text) => this.setState({definition : text})}          
-            value={this.state.definition}
-          />
+            value={this.state.definition}/>
+
           <Text>Penyebab</Text>
           <TextInput 
             onChangeText={(text) => this.setState({cause : text})}          
-            value={this.state.cause}
-          />
+            value={this.state.cause}/>
+
           <Text>Pencegahan</Text>
           <TextInput 
             onChangeText={(text) => this.setState({deterrent : text})}          
-            value={this.state.deterrent}
-          />
+            value={this.state.deterrent}/>
+
           <Text>Obat</Text>
           <TextInput 
             onChangeText={(text) => this.setState({firstAid : text})}          
-            value={this.state.firstAid}
-          />
-          <Button 
-          title="Simpan"
-          onPress={() =>{         
+            value={this.state.firstAid} />
+          
+          <Button title="Simpan"
+          onPress={() => {         
             const isian = {
               disease: this.Capitalize(this.state.disease),
               definition: this.Capitalize(this.state.definition),
@@ -106,8 +93,8 @@ export default class Insert extends React.Component {
               deterrent: this.Capitalize(this.state.deterrent),
               first_aid: this.Capitalize(this.state.firstAid)
             }
-            saveDisease(isian) //if u want to add some confirmation, add <<<.then>>> after this code
-          }}
+            saveDisease(isian).then(this._onPressOK())//if u want to add some confirmation, add <<<.then>>> after this code
+           }}
           />
         </ScrollView>
       </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, StatusBar, Button, FlatList, ActivityIndicator, Text, View, TouchableOpacity  } from 'react-native';
+import { StyleSheet, StatusBar, Button, FlatList, ActivityIndicator, Text, View, TouchableOpacity, Alert, BackHandler  } from 'react-native';
 import { SearchBar, Header, Divider } from 'react-native-elements';
 
 export default class Home extends React.Component {
@@ -19,6 +19,13 @@ export default class Home extends React.Component {
   }
 
   componentDidMount(){   
+    // BackHandler.addEventListener('hardwareBackPress', function(){
+    //   if (!this.onMainScreen()) {
+    //     this.goBack();
+    //     return true;
+    //   }
+    //   return false;
+    // })
     return fetch('http://medped.achmadekojulianto.com/index.php/api/disease')
       .then((response) => response.json())
       .then((responseJson) => {
@@ -35,6 +42,11 @@ export default class Home extends React.Component {
         this.setState({ error, loading: false })
       });
   } 
+
+  // componentWillUnmount() {
+  //   BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  // }
+
   searchFilterFunction(text) {  
     //passing inserted text in searchbar  
     const newData = this.arrayHolder.filter(function(item) {   
@@ -50,6 +62,19 @@ export default class Home extends React.Component {
       search : text
    });  
   };
+
+  handleBackButton = () => {
+    Alert.alert(
+      'Keluar Aplikasi',
+      'Apakah anda yakin untuk keluar aplikasi', [{
+        text: 'Tidak'
+      },{
+        text: 'Ya',
+        onPress: () => BackHandler.exitApp()
+      }]
+    )
+    return true
+  } 
 
   handleRefresh = () => {
     this.setState ({
@@ -68,7 +93,7 @@ export default class Home extends React.Component {
         </View>
       )
     } else {
-      return(
+      return (
         <View style={styles.container}>
           <StatusBar backgroundColor="rgb(4,38,63)" translucent={true}/>
           <Header   
