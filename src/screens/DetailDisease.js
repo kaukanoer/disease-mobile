@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View, StyleSheet, FlatList, ActivityIndicator, StatusBar  } from 'react-native';
-import { SearchBar, Header, Divider } from 'react-native-elements';
+import { Text, View, StyleSheet, FlatList, ActivityIndicator, StatusBar, Dimensions } from 'react-native';
+import {  Header, Divider } from 'react-native-elements';
+import HTML from 'react-native-render-html'
 
 export default class DetailDisease extends React.Component {
   static navigationOptions = {
@@ -20,17 +21,14 @@ export default class DetailDisease extends React.Component {
         this.setState({
           isLoading: false,
           dataSource: responseJson,
-        }, function(){
-
         });
-
       })
       .catch((error) =>{
         console.error(error);
       });
   } 
+  
   render(){
-    
     if(this.state.isLoading){
       return(
         <View style={{flex: 1, padding: 20}}>
@@ -51,23 +49,27 @@ export default class DetailDisease extends React.Component {
               renderItem={({item}) => 
               <View style={styles.detailContainer}>            
                 <Text style={styles.judul}>Definisi</Text>
-                <Text style={styles.subJudul}>{item.Definition}</Text>
+                {/* <Text style={styles.subJudul}>{item.Definition}</Text> */}
+                <HTML style={styles.subJudul} html={item.Definition}/>
                 <Divider/>
 
                 <Text style={styles.judul}>Penyebab</Text>
-                <Text style={styles.subJudul}>{item.Cause}</Text>
+                {/* <Text style={styles.subJudul}>{item.Cause}</Text> */}
+                  <HTML style={styles.subJudul} html={item.Cause}/>
                 <Divider/>
 
                 <Text style={styles.judul}>Pencegahan</Text>
-                <Text style={styles.subJudul}>{item.Deterrent}</Text>
+                {/* <Text style={styles.subJudul}>{item.Deterrent}</Text> */}
+                <HTML html={item.Deterrent} style={styles.subJudul}/>
                 <Divider/>
 
                 <Text style={styles.judul}>Obat:</Text>
-                <Text style={styles.subJudul}>{item.First_Aid}</Text>
+                {/* <Text style={styles.subJudul}>{item.First_Aid}</Text> */}
+                <HTML html={item.First_Aid} style={styles.subJudul}/>
               </View>}
               keyExtractor={({Disease}, index) => Disease}
           />
-          </View>
+        </View>
       )
     }
   }

@@ -93,7 +93,7 @@ export default class Insert extends React.Component {
               deterrent: this.Capitalize(this.state.deterrent),
               first_aid: this.Capitalize(this.state.firstAid)
             }
-            saveDisease(isian).then(this._onPressOK())//if u want to add some confirmation, add <<<.then>>> after this code
+            saveDisease(isian).then(this._onPressOK())
            }}
           />
         </ScrollView>
